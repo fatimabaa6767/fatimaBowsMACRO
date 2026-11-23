@@ -1,7 +1,7 @@
- --====================================
+--========================================
 -- FATIMABOWSMACRO
--- BADDIES PANEL EDITION
---====================================
+-- CLEAR PANEL EDITION
+--========================================
 
 local UIS = game:GetService("UserInputService")
 local VIM = game:GetService("VirtualInputManager")
@@ -13,19 +13,27 @@ local Player = Players.LocalPlayer
 local Enabled = true
 local Running = false
 local Speed = 2
+local SnowDelay = 0.09
 
--- SPEED
-local function WaitSpeed()
-    task.wait(0.08 / Speed)
-end
+-- COLORS
+local PINK = Color3.fromRGB(255, 170, 220)
+local PURPLE = Color3.fromRGB(190, 140, 255)
+local WHITE = Color3.fromRGB(255, 255, 255)
+local CLEAR = 0.30
 
--- PRESS KEY
+--========================================
+-- KEY INPUT
+--========================================
+
 local function PressKey(key)
     VIM:SendKeyEvent(true, key, false, game)
     VIM:SendKeyEvent(false, key, false, game)
 end
 
--- EQUIP SLOT
+local function WaitSpeed()
+    task.wait(0.08 / Speed)
+end
+
 local function Equip(slot)
     local keys = {
         [0] = Enum.KeyCode.Zero,
@@ -46,7 +54,6 @@ local function Equip(slot)
     end
 end
 
--- TAP CENTER
 local function TapCenter()
     local camera = workspace.CurrentCamera
     if not camera then return end
@@ -58,25 +65,36 @@ local function TapCenter()
     VIM:SendMouseButtonEvent(x, y, 0, false, game, 0)
 end
 
+--========================================
 -- GUI
+--========================================
+
 local gui = Instance.new("ScreenGui")
-gui.Name = "FatimaBowsPanel"
+gui.Name = "FatimaBowsMacro"
 gui.ResetOnSpawn = false
 gui.Parent = Player:WaitForChild("PlayerGui")
 
 local Main = Instance.new("Frame")
-Main.Size = UDim2.new(0, 260, 0, 390)
-Main.Position = UDim2.new(0.5, -130, 0.5, -195)
-Main.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
+Main.Name = "Main"
+Main.Size = UDim2.fromOffset(310, 430)
+Main.Position = UDim2.new(0.5, -155, 0.5, -215)
+Main.BackgroundColor3 = Color3.fromRGB(35, 25, 45)
+Main.BackgroundTransparency = CLEAR
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.Parent = gui
 
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 12)
-corner.Parent = Main
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 14)
+mainCorner.Parent = Main
 
--- DRAG PANEL
+local stroke = Instance.new("UIStroke")
+stroke.Color = PINK
+stroke.Transparency = 0.15
+stroke.Thickness = 1.5
+stroke.Parent = Main
+
+-- DRAGGING
 local dragging = false
 local dragStart
 local startPos
@@ -112,41 +130,108 @@ UIS.InputEnded:Connect(function(input)
     end
 end)
 
--- TITLE
+-- TITLE BAR
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, 0, 0, 38)
+Title.Size = UDim2.new(1, -45, 0, 40)
+Title.Position = UDim2.fromOffset(10, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "FATIMABOWSMACRO"
-Title.TextColor3 = Color3.fromRGB(255, 180, 220)
-Title.TextSize = 18
+Title.Text = "FATIMA BOWS"
+Title.TextColor3 = PINK
 Title.Font = Enum.Font.GothamBold
+Title.TextSize = 19
+Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Main
+
+local Close = Instance.new("TextButton")
+Close.Size = UDim2.fromOffset(35, 35)
+Close.Position = UDim2.new(1, -40, 0, 3)
+Close.BackgroundTransparency = 1
+Close.Text = "×"
+Close.TextColor3 = WHITE
+Close.TextSize = 27
+Close.Parent = Main
+
+-- REOPEN BUTTON
+local Reopen = Instance.new("TextButton")
+Reopen.Size = UDim2.fromOffset(55, 45)
+Reopen.Position = UDim2.new(0, 15, 0.5, 0)
+Reopen.BackgroundColor3 = Color3.fromRGB(35, 25, 45)
+Reopen.BackgroundTransparency = 0.15
+Reopen.Text = "FB"
+Reopen.TextColor3 = PINK
+Reopen.Font = Enum.Font.GothamBold
+Reopen.TextSize = 18
+Reopen.Visible = false
+Reopen.Parent = gui
+
+local reopenCorner = Instance.new("UICorner")
+reopenCorner.CornerRadius = UDim.new(0, 12)
+reopenCorner.Parent = Reopen
+
+Close.MouseButton1Click:Connect(function()
+    Main.Visible = false
+    Reopen.Visible = true
+end)
+
+Reopen.MouseButton1Click:Connect(function()
+    Main.Visible = true
+    Reopen.Visible = false
+end)
 
 -- STATUS
 local Status = Instance.new("TextLabel")
-Status.Position = UDim2.new(0, 10, 0, 40)
+Status.Position = UDim2.fromOffset(10, 42)
 Status.Size = UDim2.new(1, -20, 0, 22)
 Status.BackgroundTransparency = 1
 Status.Text = "Status: Ready"
-Status.TextColor3 = Color3.fromRGB(220, 220, 220)
-Status.TextSize = 13
+Status.TextColor3 = WHITE
+Status.TextSize = 12
+Status.Font = Enum.Font.Gotham
 Status.Parent = Main
 
-local function SetStatus(msg)
-    Status.Text = "Status: " .. msg
+local function SetStatus(message)
+    Status.Text = "Status: " .. message
 end
 
--- BUTTON CREATOR
-local function MakeButton(name, y, callback)
+-- SECTION
+local function MakeSection(name, y, height)
+    local section = Instance.new("Frame")
+    section.Position = UDim2.fromOffset(10, y)
+    section.Size = UDim2.new(1, -20, 0, height)
+    section.BackgroundColor3 = Color3.fromRGB(70, 48, 85)
+    section.BackgroundTransparency = 0.30
+    section.BorderSizePixel = 0
+    section.Parent = Main
+
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, 9)
+    c.Parent = section
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -12, 0, 22)
+    label.Position = UDim2.fromOffset(8, 2)
+    label.BackgroundTransparency = 1
+    label.Text = name
+    label.TextColor3 = PINK
+    label.TextSize = 13
+    label.Font = Enum.Font.GothamBold
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = section
+
+    return section
+end
+
+local function MakeButton(parent, name, x, y, width, callback)
     local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, -20, 0, 30)
-    button.Position = UDim2.new(0, 10, 0, y)
-    button.BackgroundColor3 = Color3.fromRGB(65, 48, 75)
-    button.TextColor3 = Color3.new(1, 1, 1)
+    button.Position = UDim2.fromOffset(x, y)
+    button.Size = UDim2.fromOffset(width, 29)
+    button.BackgroundColor3 = Color3.fromRGB(105, 70, 125)
+    button.BackgroundTransparency = 0.15
     button.Text = name
-    button.TextSize = 13
+    button.TextColor3 = WHITE
+    button.TextSize = 12
     button.Font = Enum.Font.GothamBold
-    button.Parent = Main
+    button.Parent = parent
 
     local c = Instance.new("UICorner")
     c.CornerRadius = UDim.new(0, 7)
@@ -156,7 +241,10 @@ local function MakeButton(name, y, callback)
     return button
 end
 
+--========================================
 -- ACTIONS
+--========================================
+
 local function SingleWeapon(slot)
     if not Enabled or Running then return end
 
@@ -169,11 +257,11 @@ local function SingleWeapon(slot)
         Equip(2)
 
         Running = false
-        SetStatus("Ready")
+        SetStatus("Loverboard ready")
     end)
 end
 
-local function RunCombo(slots, doubleTap)
+local function RunCombo(slots, delay)
     if not Enabled or Running then return end
 
     Running = true
@@ -183,19 +271,39 @@ local function RunCombo(slots, doubleTap)
         for _, slot in ipairs(slots) do
             Equip(slot)
             TapCenter()
-
-            if doubleTap then
-                WaitSpeed()
-                TapCenter()
-            end
-
-            WaitSpeed()
+            task.wait(delay)
         end
 
         Equip(2)
 
         Running = false
-        SetStatus("Ready")
+        SetStatus("Loverboard ready")
+    end)
+end
+
+local function SnowMacro()
+    if not Enabled or Running then return end
+
+    Running = true
+    SetStatus("Gold Snow")
+
+    task.spawn(function()
+        -- GOLD SNOW
+        Equip(8)
+        TapCenter()
+
+        task.wait(SnowDelay)
+
+        -- BLUE SNOW
+        SetStatus("Blue Snow")
+        Equip(9)
+        TapCenter()
+
+        -- QUICK LOVERBOARD RETURN
+        Equip(2)
+
+        Running = false
+        SetStatus("Loverboard ready")
     end)
 end
 
@@ -211,71 +319,94 @@ local function Brass()
     SetStatus("Brass equipped")
 end
 
--- PANEL BUTTONS
-MakeButton("RPG", 70, function()
+--========================================
+-- SNOW SECTION
+--========================================
+
+local SnowSection = MakeSection("SNOW CONTROLS", 70, 78)
+
+MakeButton(SnowSection, "GOLD 8", 8, 34, 85, function()
+    if not Enabled or Running then return end
+    Running = true
+    Equip(8)
+    Running = false
+    SetStatus("Gold Snow equipped")
+end)
+
+MakeButton(SnowSection, "BLUE 9", 105, 34, 85, function()
+    if not Enabled or Running then return end
+    Running = true
+    Equip(9)
+    Running = false
+    SetStatus("Blue Snow equipped")
+end)
+
+MakeButton(SnowSection, "SNOW MACRO", 202, 34, 85, SnowMacro)
+
+-- WEAPON SECTION
+local WeaponSection = MakeSection("WEAPONS", 155, 78)
+
+MakeButton(WeaponSection, "RPG", 8, 34, 62, function()
     SingleWeapon(1)
 end)
 
-MakeButton("Loverboard", 104, Loverboard)
-
-MakeButton("Taser", 138, function()
+MakeButton(WeaponSection, "TASER", 77, 34, 62, function()
     SingleWeapon(3)
 end)
 
-MakeButton("Weapon Combo", 172, function()
-    RunCombo({4, 5, 6, 7}, true)
+MakeButton(WeaponSection, "COMBO", 146, 34, 62, function()
+    RunCombo({4, 5, 6, 7}, 0.08 / Speed)
 end)
 
-MakeButton("Snows", 206, function()
-    RunCombo({8, 9}, true)
-end)
+MakeButton(WeaponSection, "BRASS", 215, 34, 62, Brass)
 
-MakeButton("Brass", 240, Brass)
+-- LOVERBOARD SECTION
+local BoardSection = MakeSection("LOVERBOARD", 240, 48)
 
-MakeButton("Reload (X)", 274, function()
+MakeButton(BoardSection, "EQUIP SLOT 2", 8, 25, 270, Loverboard)
+
+-- RELOAD SECTION
+local ReloadSection = MakeSection("RELOAD", 295, 48)
+
+MakeButton(ReloadSection, "MANUAL RELOAD (X)", 8, 25, 270, function()
     PressKey(Enum.KeyCode.X)
     SetStatus("Reload pressed")
 end)
 
--- SPEED CONTROLS
+-- SETTINGS SECTION
+local Settings = MakeSection("SETTINGS", 350, 72)
+
 local SpeedLabel = Instance.new("TextLabel")
-SpeedLabel.Position = UDim2.new(0, 10, 0, 310)
-SpeedLabel.Size = UDim2.new(1, -20, 0, 24)
+SpeedLabel.Position = UDim2.fromOffset(90, 30)
+SpeedLabel.Size = UDim2.fromOffset(100, 28)
 SpeedLabel.BackgroundTransparency = 1
-SpeedLabel.TextColor3 = Color3.fromRGB(255, 180, 220)
+SpeedLabel.Text = "Speed: 2"
+SpeedLabel.TextColor3 = WHITE
 SpeedLabel.Font = Enum.Font.GothamBold
 SpeedLabel.TextSize = 14
-SpeedLabel.Text = "Speed: 2"
-SpeedLabel.Parent = Main
+SpeedLabel.Parent = Settings
 
-MakeButton("Speed +", 336, function()
-    Speed = math.min(10, Speed + 1)
-    SpeedLabel.Text = "Speed: " .. Speed
-end)
-
-MakeButton("Speed -", 370, function()
+MakeButton(Settings, "−", 25, 30, 45, function()
     Speed = math.max(1, Speed - 1)
     SpeedLabel.Text = "Speed: " .. Speed
 end)
 
--- ENABLE / DISABLE
-local Toggle = Instance.new("TextButton")
-Toggle.Position = UDim2.new(0, 10, 0, 404)
-Toggle.Size = UDim2.new(1, -20, 0, 30)
-Toggle.BackgroundColor3 = Color3.fromRGB(120, 55, 85)
-Toggle.TextColor3 = Color3.new(1, 1, 1)
-Toggle.Text = "Disable Macro"
-Toggle.Font = Enum.Font.GothamBold
-Toggle.TextSize = 13
-Toggle.Parent = Main
+MakeButton(Settings, "+", 210, 30, 45, function()
+    Speed = math.min(10, Speed + 1)
+    SpeedLabel.Text = "Speed: " .. Speed
+end)
 
-Toggle.MouseButton1Click:Connect(function()
+-- ENABLE / DISABLE
+local Toggle = MakeButton(Main, "DISABLE MACRO", 10, 426, 290, function()
     Enabled = not Enabled
-    Toggle.Text = Enabled and "Disable Macro" or "Enable Macro"
+    Toggle.Text = Enabled and "DISABLE MACRO" or "ENABLE MACRO"
     SetStatus(Enabled and "Ready" or "Disabled")
 end)
 
+--========================================
 -- CONTROLLER INPUTS
+--========================================
+
 UIS.InputBegan:Connect(function(input, processed)
     if processed or not Enabled then return end
 
@@ -289,14 +420,14 @@ UIS.InputBegan:Connect(function(input, processed)
         SingleWeapon(3)
 
     elseif input.KeyCode == Enum.KeyCode.ButtonL3 then
-        RunCombo({4, 5, 6, 7}, true)
+        RunCombo({4, 5, 6, 7}, 0.08 / Speed)
 
     elseif input.KeyCode == Enum.KeyCode.ButtonY then
-        RunCombo({8, 9}, true)
+        SnowMacro()
 
     elseif input.KeyCode == Enum.KeyCode.DPadRight then
         Brass()
     end
 end)
 
-print("FatimaBowsMacro Panel Loaded!")
+print("FatimaBowsMacro Clear Panel Loaded!")
