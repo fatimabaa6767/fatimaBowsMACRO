@@ -22,17 +22,16 @@ local canGrenade = true
 local canTaser = true
 local canRPGMacro = true
 
-local function tapAt(x, y)
-    VIM:SendMouseButtonEvent(x, y, 0, true, game, 0)
-    VIM:SendMouseButtonEvent(x, y, 0, false, game, 0)
-end
-
 local function tapCenter()
     local camera = workspace.CurrentCamera
     if not camera then return end
 
     local size = camera.ViewportSize
-    tapAt(size.X / 2, size.Y / 2)
+    local x = size.X / 2
+    local y = size.Y / 2
+
+    VIM:SendMouseButtonEvent(x, y, 0, true, game, 0)
+    VIM:SendMouseButtonEvent(x, y, 0, false, game, 0)
 end
 
 local function pressKey(key)
@@ -43,24 +42,25 @@ end
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
-    -- SNOW: Y - PARALLEL AIM
+    -- SINGLE SNOW: Y
     if input.KeyCode == snowButton and canSnow then
         canSnow = false
 
-        pressKey(Enum.KeyCode.Three)
-        tapCenter()
+        task.spawn(function()
+            pressKey(Enum.KeyCode.Three)
+            tapCenter()
 
-        task.wait(0.05)
+            task.wait(0.08)
 
-        pressKey(Enum.KeyCode.Four)
-        tapCenter()
+            pressKey(Enum.KeyCode.Four)
+            tapCenter()
 
-        task.wait(0.05)
+            task.wait(0.05)
 
-        pressKey(Enum.KeyCode.Two)
-        tapCenter()
+            pressKey(Enum.KeyCode.Two)
+            tapCenter()
 
-        task.delay(snowCooldown, function()
+            task.wait(snowCooldown)
             canSnow = true
         end)
     end
@@ -69,26 +69,27 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == comboButton and canCombo then
         canCombo = false
 
-        pressKey(Enum.KeyCode.Five)
-        tapCenter()
-        task.wait(0.05)
+        task.spawn(function()
+            pressKey(Enum.KeyCode.Five)
+            tapCenter()
+            task.wait(0.05)
 
-        pressKey(Enum.KeyCode.Six)
-        tapCenter()
-        task.wait(0.05)
+            pressKey(Enum.KeyCode.Six)
+            tapCenter()
+            task.wait(0.05)
 
-        pressKey(Enum.KeyCode.Seven)
-        tapCenter()
-        task.wait(0.05)
+            pressKey(Enum.KeyCode.Seven)
+            tapCenter()
+            task.wait(0.05)
 
-        pressKey(Enum.KeyCode.Eight)
-        tapCenter()
-        task.wait(0.05)
+            pressKey(Enum.KeyCode.Eight)
+            tapCenter()
+            task.wait(0.05)
 
-        pressKey(Enum.KeyCode.Two)
-        tapCenter()
+            pressKey(Enum.KeyCode.Two)
+            tapCenter()
 
-        task.delay(comboCooldown, function()
+            task.wait(comboCooldown)
             canCombo = true
         end)
     end
@@ -97,14 +98,15 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == rpgButton and canRPG then
         canRPG = false
 
-        pressKey(Enum.KeyCode.One)
-        tapCenter()
-        task.wait(0.05)
+        task.spawn(function()
+            pressKey(Enum.KeyCode.One)
+            tapCenter()
+            task.wait(0.05)
 
-        pressKey(Enum.KeyCode.Two)
-        tapCenter()
+            pressKey(Enum.KeyCode.Two)
+            tapCenter()
 
-        task.delay(rpgCooldown, function()
+            task.wait(rpgCooldown)
             canRPG = true
         end)
     end
@@ -113,15 +115,16 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == grenadeButton and canGrenade then
         canGrenade = false
 
-        pressKey(Enum.KeyCode.Nine)
-        tapCenter()
-        task.wait(0.05)
+        task.spawn(function()
+            pressKey(Enum.KeyCode.Nine)
+            tapCenter()
+            task.wait(0.05)
 
-        tapCenter()
-        pressKey(Enum.KeyCode.Two)
-        tapCenter()
+            tapCenter()
+            pressKey(Enum.KeyCode.Two)
+            tapCenter()
 
-        task.delay(grenadeCooldown, function()
+            task.wait(grenadeCooldown)
             canGrenade = true
         end)
     end
@@ -130,15 +133,16 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == taserButton and canTaser then
         canTaser = false
 
-        pressKey(Enum.KeyCode.Zero)
-        tapCenter()
-        task.wait(0.05)
+        task.spawn(function()
+            pressKey(Enum.KeyCode.Zero)
+            tapCenter()
+            task.wait(0.05)
 
-        tapCenter()
-        pressKey(Enum.KeyCode.Two)
-        tapCenter()
+            tapCenter()
+            pressKey(Enum.KeyCode.Two)
+            tapCenter()
 
-        task.delay(grenadeCooldown, function()
+            task.wait(grenadeCooldown)
             canTaser = true
         end)
     end
@@ -147,19 +151,20 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == rpgMacroButton and canRPGMacro then
         canRPGMacro = false
 
-        pressKey(Enum.KeyCode.Zero)
-        tapCenter()
+        task.spawn(function()
+            pressKey(Enum.KeyCode.Zero)
+            tapCenter()
 
-        task.wait(0.1)
+            task.wait(0.1)
 
-        pressKey(Enum.KeyCode.R)
+            pressKey(Enum.KeyCode.R)
 
-        task.wait(0.1)
+            task.wait(0.1)
 
-        pressKey(Enum.KeyCode.Two)
-        tapCenter()
+            pressKey(Enum.KeyCode.Two)
+            tapCenter()
 
-        task.delay(rpgMacroCooldown, function()
+            task.wait(rpgMacroCooldown)
             canRPGMacro = true
         end)
     end
