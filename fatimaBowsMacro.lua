@@ -15,9 +15,6 @@ local rpgCooldown = 0.25
 local grenadeCooldown = 0.25
 local rpgMacroCooldown = 0.3
 
--- Subtle snow spread
-local snowSpread = 0.025
-
 local canSnow = true
 local canCombo = true
 local canRPG = true
@@ -46,30 +43,22 @@ end
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
-    -- SNOW: Y
+    -- SNOW: Y - PARALLEL AIM
     if input.KeyCode == snowButton and canSnow then
         canSnow = false
 
-        local camera = workspace.CurrentCamera
-        if camera then
-            local size = camera.ViewportSize
-            local centerX = size.X / 2
-            local centerY = size.Y / 2
-            local offset = size.X * snowSpread
+        pressKey(Enum.KeyCode.Three)
+        tapCenter()
 
-            pressKey(Enum.KeyCode.Three)
-            tapAt(centerX - offset, centerY)
+        task.wait(0.05)
 
-            task.wait(0.05)
+        pressKey(Enum.KeyCode.Four)
+        tapCenter()
 
-            pressKey(Enum.KeyCode.Four)
-            tapAt(centerX + offset, centerY)
+        task.wait(0.05)
 
-            task.wait(0.05)
-
-            pressKey(Enum.KeyCode.Two)
-            tapCenter()
-        end
+        pressKey(Enum.KeyCode.Two)
+        tapCenter()
 
         task.delay(snowCooldown, function()
             canSnow = true
