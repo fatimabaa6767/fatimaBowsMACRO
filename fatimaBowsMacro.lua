@@ -42,7 +42,7 @@ end
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
-    -- SNOW: GOLD -> BLUE -> BOARD
+    -- FAST SNOW: GOLD -> BLUE -> BOARD
     if input.KeyCode == snowButton and canSnow then
         canSnow = false
 
@@ -50,12 +50,12 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
             pressKey(Enum.KeyCode.Three)
             tapCenter()
 
-            task.wait(0.12)
+            task.wait(0.07)
 
             pressKey(Enum.KeyCode.Four)
             tapCenter()
 
-            task.wait(0.08)
+            task.wait(0.05)
 
             pressKey(Enum.KeyCode.Two)
             tapCenter()
