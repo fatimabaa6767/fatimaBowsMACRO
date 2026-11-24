@@ -48,13 +48,11 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
 
         task.spawn(function()
             pressKey(Enum.KeyCode.Three)
-            task.wait(0.10)
             tapCenter()
 
             task.wait(0.12)
 
             pressKey(Enum.KeyCode.Four)
-            task.wait(0.10)
             tapCenter()
 
             task.wait(0.08)
@@ -70,6 +68,7 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- COMBO: L3
     if input.KeyCode == comboButton and canCombo then
         canCombo = false
+
         task.spawn(function()
             pressKey(Enum.KeyCode.Five)
             tapCenter()
@@ -98,6 +97,7 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- RPG: LB (UNCHANGED)
     if input.KeyCode == rpgButton and canRPG then
         canRPG = false
+
         task.spawn(function()
             pressKey(Enum.KeyCode.One)
             tapCenter()
@@ -111,9 +111,10 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
         end)
     end
 
-    -- GRENADE
+    -- GRENADE: DPAD LEFT
     if input.KeyCode == grenadeButton and canGrenade then
         canGrenade = false
+
         task.spawn(function()
             pressKey(Enum.KeyCode.Nine)
             tapCenter()
@@ -128,9 +129,10 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
         end)
     end
 
-    -- TASER
+    -- TASER: DPAD RIGHT
     if input.KeyCode == taserButton and canTaser then
         canTaser = false
+
         task.spawn(function()
             pressKey(Enum.KeyCode.Zero)
             tapCenter()
@@ -145,9 +147,10 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
         end)
     end
 
-    -- RPG MACRO
+    -- RPG MACRO: DPAD DOWN (UNCHANGED)
     if input.KeyCode == rpgMacroButton and canRPGMacro then
         canRPGMacro = false
+
         task.spawn(function()
             pressKey(Enum.KeyCode.Zero)
             tapCenter()
