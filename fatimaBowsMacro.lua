@@ -49,12 +49,10 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
         task.spawn(function()
             pressKey(Enum.KeyCode.Three)
             tapCenter()
-
             task.wait(0.08)
 
             pressKey(Enum.KeyCode.Four)
             tapCenter()
-
             task.wait(0.05)
 
             pressKey(Enum.KeyCode.Two)
@@ -154,11 +152,9 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
         task.spawn(function()
             pressKey(Enum.KeyCode.Zero)
             tapCenter()
-
             task.wait(0.1)
 
             pressKey(Enum.KeyCode.R)
-
             task.wait(0.1)
 
             pressKey(Enum.KeyCode.Two)
