@@ -1,5 +1,3 @@
--- FATIMABOWSMACRO
--- Original Controller Setup + Gold/Blue Snow
 
 local UIS = game:GetService("UserInputService")
 local VIM = game:GetService("VirtualInputManager")
@@ -7,34 +5,36 @@ local VIM = game:GetService("VirtualInputManager")
 local snowButton = Enum.KeyCode.ButtonY
 local comboButton = Enum.KeyCode.ButtonL3
 local rpgButton = Enum.KeyCode.ButtonL1
-local taserButton = Enum.KeyCode.ButtonR1
-local boardButton = Enum.KeyCode.DPadLeft
-local brassButton = Enum.KeyCode.DPadRight
+local grenadeButton = Enum.KeyCode.DPadLeft
+local taserButton = Enum.KeyCode.DPadRight
+local rpgMacroButton = Enum.KeyCode.DPadDown
 
-local snowCooldown = 0.2
+local snowCooldown = 0.15
 local comboCooldown = 0.2
 local rpgCooldown = 0.25
-local taserCooldown = 0.25
-local boardCooldown = 0.2
-local brassCooldown = 0.2
+local grenadeCooldown = 0.25
+local rpgMacroCooldown = 0.3
+
+local snowSpread = 0.08
 
 local canSnow = true
 local canCombo = true
 local canRPG = true
+local canGrenade = true
 local canTaser = true
-local canBoard = true
-local canBrass = true
+local canRPGMacro = true
+
+local function tapAt(x, y)
+    VIM:SendMouseButtonEvent(x, y, 0, true, game, 0)
+    VIM:SendMouseButtonEvent(x, y, 0, false, game, 0)
+end
 
 local function tapCenter()
     local camera = workspace.CurrentCamera
     if not camera then return end
 
     local size = camera.ViewportSize
-    local tapX = size.X / 2
-    local tapY = size.Y / 2
-
-    VIM:SendMouseButtonEvent(tapX, tapY, 0, true, game, 0)
-    VIM:SendMouseButtonEvent(tapX, tapY, 0, false, game, 0)
+    tapAt(size.X / 2, size.Y / 2)
 end
 
 local function pressKey(key)
@@ -42,134 +42,137 @@ local function pressKey(key)
     VIM:SendKeyEvent(false, key, false, game)
 end
 
-local function equip(slot)
-    local keys = {
-        [0] = Enum.KeyCode.Zero,
-        [1] = Enum.KeyCode.One,
-        [2] = Enum.KeyCode.Two,
-        [3] = Enum.KeyCode.Three,
-        [4] = Enum.KeyCode.Four,
-        [5] = Enum.KeyCode.Five,
-        [6] = Enum.KeyCode.Six,
-        [7] = Enum.KeyCode.Seven,
-        [8] = Enum.KeyCode.Eight,
-        [9] = Enum.KeyCode.Nine
-    }
-
-    local key = keys[slot]
-    if key then
-        pressKey(key)
-    end
-end
-
-local function returnToBoard()
-    equip(2)
-    tapCenter()
-end
-
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
-    -- Y = GOLD SNOW THEN BLUE SNOW
+    -- SNOW: Y = WIDE V SPREAD
     if input.KeyCode == snowButton and canSnow then
         canSnow = false
 
-        task.spawn(function()
-            -- Gold Snow
-            equip(8)
-            tapCenter()
+        local camera = workspace.CurrentCamera
+        if camera then
+            local size = camera.ViewportSize
+            local centerX = size.X / 2
+            local centerY = size.Y / 2
+            local offset = size.X * snowSpread
+
+            pressKey(Enum.KeyCode.Three)
+            tapAt(centerX - offset, centerY)
 
             task.wait(0.05)
 
-            -- Blue Snow
-            equip(9)
-            tapCenter()
+            pressKey(Enum.KeyCode.Four)
+            tapAt(centerX + offset, centerY)
 
             task.wait(0.05)
 
-            -- Return to Loverboard
-            returnToBoard()
+            pressKey(Enum.KeyCode.Two)
+            tapCenter()
+        end
 
-            task.wait(snowCooldown)
+        task.delay(snowCooldown, function()
             canSnow = true
         end)
     end
 
-    -- L3 = WEAPON COMBO
+    -- COMBO: L3
     if input.KeyCode == comboButton and canCombo then
         canCombo = false
 
-        task.spawn(function()
-            for slot = 4, 7 do
-                equip(slot)
-                tapCenter()
-                task.wait(0.05)
-            end
+        pressKey(Enum.KeyCode.Five)
+        tapCenter()
+        task.wait(0.05)
 
-            returnToBoard()
+        pressKey(Enum.KeyCode.Six)
+        tapCenter()
+        task.wait(0.05)
 
-            task.wait(comboCooldown)
+        pressKey(Enum.KeyCode.Seven)
+        tapCenter()
+        task.wait(0.05)
+
+        pressKey(Enum.KeyCode.Eight)
+        tapCenter()
+        task.wait(0.05)
+
+        pressKey(Enum.KeyCode.Two)
+        tapCenter()
+
+        task.delay(comboCooldown, function()
             canCombo = true
         end)
     end
 
-    -- LB = RPG
+    -- RPG: LB
     if input.KeyCode == rpgButton and canRPG then
         canRPG = false
 
-        task.spawn(function()
-            equip(1)
-            tapCenter()
+        pressKey(Enum.KeyCode.One)
+        tapCenter()
+        task.wait(0.05)
 
-            task.wait(0.05)
+        pressKey(Enum.KeyCode.Two)
+        tapCenter()
 
-            returnToBoard()
-
-            task.wait(rpgCooldown)
+        task.delay(rpgCooldown, function()
             canRPG = true
         end)
     end
 
-    -- RB = TASER
+    -- GRENADE: DPAD LEFT
+    if input.KeyCode == grenadeButton and canGrenade then
+        canGrenade = false
+
+        pressKey(Enum.KeyCode.Nine)
+        tapCenter()
+        task.wait(0.05)
+
+        tapCenter()
+        pressKey(Enum.KeyCode.Two)
+        tapCenter()
+
+        task.delay(grenadeCooldown, function()
+            canGrenade = true
+        end)
+    end
+
+    -- TASER: DPAD RIGHT
     if input.KeyCode == taserButton and canTaser then
         canTaser = false
 
-        task.spawn(function()
-            equip(3)
-            tapCenter()
+        pressKey(Enum.KeyCode.Zero)
+        tapCenter()
+        task.wait(0.05)
 
-            task.wait(0.05)
+        tapCenter()
+        pressKey(Enum.KeyCode.Two)
+        tapCenter()
 
-            returnToBoard()
-
-            task.wait(taserCooldown)
+        task.delay(grenadeCooldown, function()
             canTaser = true
         end)
     end
 
-    -- D-PAD LEFT = LOVERBOARD
-    if input.KeyCode == boardButton and canBoard then
-        canBoard = false
+    -- RPG MACRO: DPAD DOWN
+    if input.KeyCode == rpgMacroButton and canRPGMacro then
+        canRPGMacro = false
 
-        task.spawn(function()
-            returnToBoard()
+        pressKey(Enum.KeyCode.Zero)
+        tapCenter()
 
-            task.wait(boardCooldown)
-            canBoard = true
-        end)
-    end
+        task.wait(0.1)
 
-    -- D-PAD RIGHT = BRASS
-    if input.KeyCode == brassButton and canBrass then
-        canBrass = false
+        pressKey(Enum.KeyCode.R)
 
-        task.spawn(function()
-            equip(0)
+        task.wait(0.1)
 
-            task.wait(brassCooldown)
-            canBrass = true
+        pressKey(Enum.KeyCode.Two)
+        tapCenter()
+
+        task.delay(rpgMacroCooldown, function()
+            canRPGMacro = true
         end)
     end
 end)
 
-print("FatimaBowsMacro loaded!")
+print("Fatima Baddies Macro Loaded!")
