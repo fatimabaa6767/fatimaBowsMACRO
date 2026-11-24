@@ -56,6 +56,8 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
             pressKey(Enum.KeyCode.Four)
             tapCenter()
 
+           task.wait(0.08)
+
             -- Immediately return to Loverboard
             pressKey(Enum.KeyCode.Two)
             tapCenter()
