@@ -55,7 +55,7 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
             pressKey(Enum.KeyCode.Four)
             tapCenter()
 
-            task.wait(0.30)
+            task.wait(0.02)
 
             pressKey(Enum.KeyCode.Two)
             tapCenter()
