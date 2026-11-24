@@ -15,7 +15,8 @@ local rpgCooldown = 0.25
 local grenadeCooldown = 0.25
 local rpgMacroCooldown = 0.3
 
-local snowSpread = 0.08
+-- Subtle snow spread
+local snowSpread = 0.025
 
 local canSnow = true
 local canCombo = true
@@ -45,7 +46,7 @@ end
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
-    -- SNOW: Y = WIDE V SPREAD
+    -- SNOW: Y
     if input.KeyCode == snowButton and canSnow then
         canSnow = false
 
