@@ -1,4 +1,3 @@
-
 local UIS = game:GetService("UserInputService")
 local VIM = game:GetService("VirtualInputManager")
 
@@ -42,21 +41,22 @@ end
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
-    -- SINGLE SNOW: Y
+    -- SNOW: Y
     if input.KeyCode == snowButton and canSnow then
         canSnow = false
 
         task.spawn(function()
+            -- Gold snow first
             pressKey(Enum.KeyCode.Three)
             tapCenter()
 
             task.wait(0.30)
 
+            -- Blue snow second
             pressKey(Enum.KeyCode.Four)
             tapCenter()
 
-            task.wait(0.02)
-
+            -- Immediately return to Loverboard
             pressKey(Enum.KeyCode.Two)
             tapCenter()
 
