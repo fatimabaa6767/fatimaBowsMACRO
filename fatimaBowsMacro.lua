@@ -67,27 +67,21 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- COMBO: L3
     if input.KeyCode == comboButton and canCombo then
         canCombo = false
-
         task.spawn(function()
             pressKey(Enum.KeyCode.Five)
             tapCenter()
             task.wait(0.05)
-
             pressKey(Enum.KeyCode.Six)
             tapCenter()
             task.wait(0.05)
-
             pressKey(Enum.KeyCode.Seven)
             tapCenter()
             task.wait(0.05)
-
             pressKey(Enum.KeyCode.Eight)
             tapCenter()
             task.wait(0.05)
-
             pressKey(Enum.KeyCode.Two)
             tapCenter()
-
             task.wait(comboCooldown)
             canCombo = true
         end)
@@ -96,15 +90,12 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- RPG: LB
     if input.KeyCode == rpgButton and canRPG then
         canRPG = false
-
         task.spawn(function()
             pressKey(Enum.KeyCode.One)
             tapCenter()
             task.wait(0.05)
-
             pressKey(Enum.KeyCode.Two)
             tapCenter()
-
             task.wait(rpgCooldown)
             canRPG = true
         end)
@@ -113,16 +104,13 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- GRENADE: DPAD LEFT
     if input.KeyCode == grenadeButton and canGrenade then
         canGrenade = false
-
         task.spawn(function()
             pressKey(Enum.KeyCode.Nine)
             tapCenter()
             task.wait(0.05)
-
             tapCenter()
             pressKey(Enum.KeyCode.Two)
             tapCenter()
-
             task.wait(grenadeCooldown)
             canGrenade = true
         end)
@@ -131,16 +119,13 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- TASER: DPAD RIGHT
     if input.KeyCode == taserButton and canTaser then
         canTaser = false
-
         task.spawn(function()
             pressKey(Enum.KeyCode.Zero)
             tapCenter()
             task.wait(0.05)
-
             tapCenter()
             pressKey(Enum.KeyCode.Two)
             tapCenter()
-
             task.wait(grenadeCooldown)
             canTaser = true
         end)
@@ -149,18 +134,14 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- RPG MACRO: DPAD DOWN
     if input.KeyCode == rpgMacroButton and canRPGMacro then
         canRPGMacro = false
-
         task.spawn(function()
             pressKey(Enum.KeyCode.Zero)
             tapCenter()
             task.wait(0.1)
-
             pressKey(Enum.KeyCode.R)
             task.wait(0.1)
-
             pressKey(Enum.KeyCode.Two)
             tapCenter()
-
             task.wait(rpgMacroCooldown)
             canRPGMacro = true
         end)
