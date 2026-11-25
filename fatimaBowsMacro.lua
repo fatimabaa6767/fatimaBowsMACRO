@@ -1,4 +1,3 @@
-
 local UIS = game:GetService("UserInputService")
 local VIM = game:GetService("VirtualInputManager")
 
@@ -42,7 +41,7 @@ end
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
-    -- FAST SNOW: GOLD -> BLUE -> BOARD
+    -- SNOW: GOLD -> BLUE -> BOARD
     if input.KeyCode == snowButton and canSnow then
         canSnow = false
 
@@ -50,12 +49,12 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
             pressKey(Enum.KeyCode.Three)
             tapCenter()
 
-            task.wait(0.07)
+            task.wait(0.06)
 
             pressKey(Enum.KeyCode.Four)
             tapCenter()
 
-            task.wait(0.05)
+            task.wait(0.04)
 
             pressKey(Enum.KeyCode.Two)
             tapCenter()
@@ -94,7 +93,7 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
         end)
     end
 
-    -- RPG: LB (UNCHANGED)
+    -- RPG: LB
     if input.KeyCode == rpgButton and canRPG then
         canRPG = false
 
@@ -147,7 +146,7 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
         end)
     end
 
-    -- RPG MACRO: DPAD DOWN (UNCHANGED)
+    -- RPG MACRO: DPAD DOWN
     if input.KeyCode == rpgMacroButton and canRPGMacro then
         canRPGMacro = false
 
